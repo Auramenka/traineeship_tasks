@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="changeset/db-changelog-create-department-table.sql" relativeToChangelogFile="true"/>
+    <include file="changeset/db-changelog-create-position-table.sql" relativeToChangelogFile="true"/>
+    <include file="changeset/db-changelog-create-employee-table.sql" relativeToChangelogFile="true"/>
+    <include file="changeset/db-changelog-create-vacation-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="set-unique-name-mysql-department" author="anna"
+               logicalFilePath="changeset/update-department-name-set-unique.sql" dbms="mysql">
+    </changeSet>
+    <changeSet id="set-unique-name-h2-department" author="anna"
+               logicalFilePath="changeset/update-department-name-set-unique-h2.sql" dbms="h2">
+    </changeSet>
+    <changeSet id="set-unique-name-mysql-position" author="anna"
+               logicalFilePath="changeset/update-position-name-set-unique.sql" dbms="mysql">
+    </changeSet>
+    <changeSet id="set-unique-name-h2-position" author="anna"
+               logicalFilePath="changeset/update-position-name-set-unique-h2.sql" dbms="h2">
+    </changeSet>
+    <!--<include file="changeset/update-department-name-set-unique.sql" relativeToChangelogFile="true"/>
+    <include file="changeset/update-department-name-set-unique-h2.sql" relativeToChangelogFile="true"/>
+    <include file="changeset/update-position-name-set-unique.sql" relativeToChangelogFile="true"/>
+    <include file="changeset/update-position-name-set-unique-h2.sql" relativeToChangelogFile="true"/>-->
+</databaseChangeLog>
