@@ -8,7 +8,6 @@ import by.itsupportme.trainee.vacationmanagmentsystem.repository.PositionReposit
 import by.itsupportme.trainee.vacationmanagmentsystem.service.PositionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,9 +25,7 @@ public class PositionServiceImpl implements PositionService {
     }
 
     public PositionDto findById(Long id) {
-        Position positionFromDb = positionRepository.findById(id)
-                .orElseThrow(() -> new NotExistsException(POSITION_DOES_NOT_EXIST));
-        return positionMapper.toDto(positionFromDb);
+        return positionMapper.toDto(getPositionFromDB(id));
     }
 
     public List<PositionDto> getAllPositions() {
@@ -38,22 +35,24 @@ public class PositionServiceImpl implements PositionService {
     }
 
     public void deletePosition(Long id) {
-        Position positionOptional = positionRepository.findById(id)
-                .orElseThrow(() -> new NotExistsException(POSITION_DOES_NOT_EXIST));
-        positionRepository.deleteById(positionOptional.getId());
+        Position positionFromDB = getPositionFromDB(id);
+        positionRepository.deleteById(positionFromDB.getId());
     }
 
     public PositionDto updatePosition(PositionDto positionDto) {
         checkPositionDto(positionDto);
-        Position positionFromDB = positionRepository.findById(positionDto.getId())
-                .orElseThrow(() -> new NotExistsException(POSITION_DOES_NOT_EXIST));
+        Position positionFromDB = getPositionFromDB(positionDto.getId());
         positionFromDB.setName(positionDto.getName());
         return positionMapper.toDto(positionRepository.save(positionFromDB));
     }
 
     private void checkPositionDto(PositionDto positionDto) {
         if (positionDto == null) {
-            throw new NotExistsException(POSITION_DTO_IS_EMPTY);
+            throw new NotExistsException("PositionDto is empty");
         }
+    }
+
+    private Position getPositionFromDB(Long id) {
+        return positionRepository.findById(id).orElseThrow(() -> new NotExistsException("Position doesn't exist"));
     }
 }

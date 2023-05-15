@@ -15,12 +15,11 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 class DepartmentIntegrationTest extends VacationManagmentSystemApplicationTests {
 
     private static final String TEST_DEPARTMENT = "Test department";
-    private static final String UPDATE_DEPARTMENT = "Update department";
+    private static final String DEPARTMENT_DOES_NOT_EXIST = "Department doesn't exist";
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -109,7 +108,7 @@ class DepartmentIntegrationTest extends VacationManagmentSystemApplicationTests 
     @Test
     void shouldUpdateExistedDepartment() throws Exception {
         Long id = createDepartment(TEST_DEPARTMENT);
-        DepartmentDto departmentDto = createDepartmentDto(UPDATE_DEPARTMENT);
+        DepartmentDto departmentDto = createDepartmentDto("Update department");
         departmentDto.setId(id);
         String json = objectMapper.writeValueAsString(departmentDto);
         mockMvc.perform(put("/api/departments")

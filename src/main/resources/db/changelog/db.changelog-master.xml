@@ -21,8 +21,4 @@
     <changeSet id="set-unique-name-h2-position" author="anna"
                logicalFilePath="changeset/update-position-name-set-unique-h2.sql" dbms="h2">
     </changeSet>
-    <!--<include file="changeset/update-department-name-set-unique.sql" relativeToChangelogFile="true"/>
-    <include file="changeset/update-department-name-set-unique-h2.sql" relativeToChangelogFile="true"/>
-    <include file="changeset/update-position-name-set-unique.sql" relativeToChangelogFile="true"/>
-    <include file="changeset/update-position-name-set-unique-h2.sql" relativeToChangelogFile="true"/>-->
 </databaseChangeLog>

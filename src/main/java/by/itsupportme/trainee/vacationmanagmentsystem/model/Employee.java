@@ -19,7 +19,7 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "first_name")
@@ -29,10 +29,9 @@ public class Employee {
     private String lastName;
 
     @Column(name = "date_birth")
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateOfBirth;
 
-    @Column
+    @Column(name = "gender")
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 

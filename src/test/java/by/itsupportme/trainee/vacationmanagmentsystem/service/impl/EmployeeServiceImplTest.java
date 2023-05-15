@@ -21,10 +21,11 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceImplTest {
+
+    private static final String EMPLOYEE_DOES_NOT_EXIST = "Employee doesn't exist";
 
     @Mock
     EmployeeRepository employeeRepository;
@@ -66,7 +67,7 @@ class EmployeeServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.saveEmployee(employeeDto));
         //then
-        assertEquals(EMPLOYEE_DTO_IS_EMPTY, result.getMessage());
+        assertEquals("EmployeeDto is empty", result.getMessage());
     }
 
     @Test
@@ -331,7 +332,7 @@ class EmployeeServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.updateEmployee(employeeDto));
         //then
-        assertEquals(DEPARTMENT_DOES_NOT_EXIST, result.getMessage());
+        assertEquals("Department doesn't exist", result.getMessage());
     }
 
     @Test
@@ -359,7 +360,7 @@ class EmployeeServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.updateEmployee(employeeDto));
         //then
-        assertEquals(POSITION_DOES_NOT_EXIST, result.getMessage());
+        assertEquals("Position doesn't exist", result.getMessage());
     }
 
     @Test
@@ -370,7 +371,7 @@ class EmployeeServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.updateEmployee(employeeDto));
         //then
-        assertEquals(DEPARTMENT_DTO_CAN_NOT_BE_NULL, result.getMessage());
+        assertEquals("DepartmentDto can't be null", result.getMessage());
     }
 
     @Test
@@ -383,7 +384,7 @@ class EmployeeServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.updateEmployee(employeeDto));
         //then
-        assertEquals(POSITION_DTO_CAN_NOT_BE_NULL, result.getMessage());
+        assertEquals("PositionDto can't be null", result.getMessage());
     }
 
     @Test
@@ -414,7 +415,7 @@ class EmployeeServiceImplTest {
         //when
         RuntimeException result = assertThrows(RuntimeException.class, () -> testSubject.updateEmployee(employeeDto));
         //then
-        assertEquals(EMPLOYEE_CAN_NOT_BE_BOSS_WITH_THE_SAME_ID, result.getMessage());
+        assertEquals("Employee can't be boss with the same id", result.getMessage());
     }
 
     @Test
@@ -446,6 +447,6 @@ class EmployeeServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.updateEmployee(employeeDto));
         //then
-        assertEquals(EMPLOYEE_BOSS_DOES_NOT_EXIST, result.getMessage());
+        assertEquals("Employee boss doesn't exist", result.getMessage());
     }
 }

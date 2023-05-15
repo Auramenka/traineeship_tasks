@@ -21,10 +21,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 @ExtendWith(MockitoExtension.class)
 class VacationServiceImplTest {
+
+    private static final String VACATION_DOES_NOT_EXIST = "Vacation doesn't exist";
 
     @Mock
     VacationRepository vacationRepository;
@@ -81,7 +82,7 @@ class VacationServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.saveVacation(vacationDto));
         //then
-        assertEquals(VACATION_DTO_IS_EMPTY, result.getMessage());
+        assertEquals("VacationDto is empty", result.getMessage());
     }
 
     @Test
@@ -92,7 +93,7 @@ class VacationServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.saveVacation(vacationDto));
         //then
-        assertEquals(CAN_NOT_TAKE_VACATION_FROM_THIS_DATE, result.getMessage());
+        assertEquals("You can't take a vacation from this date", result.getMessage());
     }
 
     @Test
@@ -106,7 +107,7 @@ class VacationServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.saveVacation(vacationDto));
         //then
-        assertEquals(CAN_NOT_TAKE_VACATION_TO_THIS_DATE, result.getMessage());
+        assertEquals("You can't take a vacation to this date", result.getMessage());
     }
 
     @Test
@@ -121,7 +122,7 @@ class VacationServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.saveVacation(vacationDto));
         //then
-        assertEquals(CAN_NOT_TAKE_VACATION_ON_THIS_DATE, result.getMessage());
+        assertEquals("You can't take a vacation on this date", result.getMessage());
     }
 
     @Test
@@ -143,7 +144,7 @@ class VacationServiceImplTest {
         //when
         NotExistsException result = assertThrows(NotExistsException.class, () -> testSubject.saveVacation(vacationDto));
         //then
-        assertEquals(EMPLOYEE_DOES_NOT_EXIST, result.getMessage());
+        assertEquals("Employee doesn't exist", result.getMessage());
     }
 
     @Test

@@ -4,13 +4,13 @@ import by.itsupportme.trainee.vacationmanagmentsystem.dto.VacationDto;
 import by.itsupportme.trainee.vacationmanagmentsystem.exception.NotExistsException;
 import by.itsupportme.trainee.vacationmanagmentsystem.mappers.VacationMapper;
 import by.itsupportme.trainee.vacationmanagmentsystem.model.Employee;
+import by.itsupportme.trainee.vacationmanagmentsystem.model.Status;
 import by.itsupportme.trainee.vacationmanagmentsystem.model.Vacation;
 import by.itsupportme.trainee.vacationmanagmentsystem.repository.EmployeeRepository;
 import by.itsupportme.trainee.vacationmanagmentsystem.repository.VacationRepository;
 import by.itsupportme.trainee.vacationmanagmentsystem.service.VacationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,23 +27,19 @@ public class VacationServiceImpl implements VacationService {
     public VacationDto saveVacation(VacationDto vacationDto) {
 
         if (vacationDto == null) {
-            throw new NotExistsException(VACATION_DTO_IS_EMPTY);
+            throw new NotExistsException("VacationDto is empty");
         }
 
         checkDateOfVacation(vacationDto);
 
-        if (vacationDto.getDateStart().isAfter(LocalDate.now())
-                && vacationDto.getDateEnd().isAfter(vacationDto.getDateStart())) {
+        takeVacationOnThisDate(vacationDto);
 
-            Employee employee = employeeRepository.findById(vacationDto.getEmployeeId())
-                    .orElseThrow(() -> new NotExistsException(EMPLOYEE_DOES_NOT_EXIST));
+        Employee employee = employeeRepository.findById(vacationDto.getEmployeeId())
+                .orElseThrow(() -> new NotExistsException("Employee doesn't exist"));
 
-             Vacation vacation = vacationMapper.toEntity(vacationDto);
-             vacation.setEmployee(employee);
-             return vacationMapper.toDto(vacationRepository.save(vacation));
-        } else {
-            throw new NotExistsException(CAN_NOT_TAKE_VACATION_ON_THIS_DATE);
-        }
+        Vacation vacation = vacationMapper.toEntity(vacationDto);
+        vacation.setEmployee(employee);
+        return vacationMapper.toDto(vacationRepository.save(vacation));
     }
 
     public List<VacationDto> getAllVacations() {
@@ -53,43 +49,52 @@ public class VacationServiceImpl implements VacationService {
     }
 
     public VacationDto findById(Long id) {
-        Vacation vacationFromDb = vacationRepository.findById(id)
-                .orElseThrow(() -> new NotExistsException(VACATION_DOES_NOT_EXIST));
-        return vacationMapper.toDto(vacationFromDb);
+        return vacationMapper.toDto(getVacationFromDB(id));
+    }
+
+    public List<VacationDto> findAllVacations(Long id, Status status) {
+        return vacationRepository.findAllMyVacationsAndBoss(id, status).stream()
+                .map(vacationMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public void deleteVacation(Long id) {
-        Vacation vacation = vacationRepository.findById(id)
-                .orElseThrow(() -> new NotExistsException(VACATION_DOES_NOT_EXIST));
-        vacationRepository.deleteById(vacation.getId());
+        Vacation vacationFromDB = getVacationFromDB(id);
+        vacationRepository.deleteById(vacationFromDB.getId());
     }
 
     public VacationDto updateVacation(VacationDto vacationDto) {
-        Vacation vacationFromDB = vacationRepository.findById(vacationDto.getId())
-                .orElseThrow(() -> new NotExistsException(VACATION_DOES_NOT_EXIST));
+        Vacation vacationFromDB = getVacationFromDB(vacationDto.getId());
 
         checkDateOfVacation(vacationDto);
 
-        if (vacationDto.getDateStart().isAfter(LocalDate.now())
-                && vacationDto.getDateEnd().isAfter(vacationDto.getDateStart())) {
+        takeVacationOnThisDate(vacationDto);
 
-            vacationFromDB.setDateStart(vacationDto.getDateStart());
-            vacationFromDB.setDateEnd(vacationDto.getDateEnd());
-            vacationFromDB.setStatus(vacationDto.getStatus());
+        vacationFromDB.setDateStart(vacationDto.getDateStart());
+        vacationFromDB.setDateEnd(vacationDto.getDateEnd());
+        vacationFromDB.setStatus(vacationDto.getStatus());
 
-            return vacationMapper.toDto(vacationRepository.save(vacationFromDB));
-        } else {
-            throw new NotExistsException(CAN_NOT_TAKE_VACATION_ON_THIS_DATE);
-        }
+        return vacationMapper.toDto(vacationRepository.save(vacationFromDB));
     }
 
     private void checkDateOfVacation(VacationDto vacationDto) {
         if (vacationDto.getDateStart() == null) {
-            throw new NotExistsException(CAN_NOT_TAKE_VACATION_FROM_THIS_DATE);
+            throw new NotExistsException("You can't take a vacation from this date");
         }
 
         if (vacationDto.getDateEnd() == null) {
-            throw new NotExistsException(CAN_NOT_TAKE_VACATION_TO_THIS_DATE);
+            throw new NotExistsException("You can't take a vacation to this date");
+        }
+    }
+
+    private Vacation getVacationFromDB(Long id) {
+        return vacationRepository.findById(id).orElseThrow(() -> new NotExistsException("Vacation doesn't exist"));
+    }
+
+    private void takeVacationOnThisDate(VacationDto vacationDto) {
+        if (vacationDto.getDateStart().isAfter(LocalDate.now())
+                && vacationDto.getDateEnd().isAfter(vacationDto.getDateStart()) == false) {
+            throw new NotExistsException("You can't take a vacation on this date");
         }
     }
 }

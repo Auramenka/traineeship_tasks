@@ -16,12 +16,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 class PositionIntegrationTest extends VacationManagmentSystemApplicationTests {
 
     private static final String TEST_POSITION = "Test position";
-    private static final String UPDATE_POSITION = "Update position";
+    private static final String POSITION_DOES_NOT_EXIST = "Position doesn't exist";
 
     @Autowired
     private PositionRepository positionRepository;
@@ -111,7 +110,7 @@ class PositionIntegrationTest extends VacationManagmentSystemApplicationTests {
     @Test
     void shouldUpdateExistedPosition() throws Exception {
         Long id = createPosition(TEST_POSITION);
-        PositionDto positionDto = createPositionDto(UPDATE_POSITION);
+        PositionDto positionDto = createPositionDto("Update position");
         positionDto.setId(id);
         String json = objectMapper.writeValueAsString(positionDto);
         mockMvc.perform(put("/api/positions")

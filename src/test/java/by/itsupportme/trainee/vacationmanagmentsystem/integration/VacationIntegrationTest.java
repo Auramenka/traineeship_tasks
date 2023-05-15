@@ -25,14 +25,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 class VacationIntegrationTest extends VacationManagmentSystemApplicationTests {
 
-    private static final String TEST_DEPARTMENT = "Test department";
-    private static final String TEST_POSITION = "Test position";
-    private static final String TEST_FIRST_NAME = "Test first name";
-    private static final String TEST_LAST_NAME = "Test last name";
+    private static final String TEST_NAME = "Test name";
+    private static final String CAN_NOT_TAKE_VACATION_FROM_THIS_DATE = "You can't take a vacation from this date";
+    private static final String CAN_NOT_TAKE_VACATION_TO_THIS_DATE = "You can't take a vacation to this date";
+    private static final String CAN_NOT_TAKE_VACATION_ON_THIS_DATE = "You can't take a vacation on this date";
+    private static final String VACATION_DOES_NOT_EXIST = "Vacation doesn't exist";
 
     @Autowired
     private VacationRepository vacationRepository;
@@ -162,7 +162,7 @@ class VacationIntegrationTest extends VacationManagmentSystemApplicationTests {
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(EMPLOYEE_DOES_NOT_EXIST));
+                .andExpect(jsonPath("$.message").value("Employee doesn't exist"));
     }
 
     @Test
@@ -336,20 +336,20 @@ class VacationIntegrationTest extends VacationManagmentSystemApplicationTests {
 
     private Department createDepartment() {
         Department department = new Department();
-        department.setName(TEST_DEPARTMENT);
+        department.setName(TEST_NAME);
         return departmentRepository.save(department);
     }
 
     private Position createPosition() {
         Position position = new Position();
-        position.setName(TEST_POSITION);
+        position.setName(TEST_NAME);
         return positionRepository.save(position);
     }
 
     private Employee createEmployee() {
         Employee employee = new Employee();
-        employee.setFirstName(TEST_FIRST_NAME);
-        employee.setLastName(TEST_LAST_NAME);
+        employee.setFirstName("Test first name");
+        employee.setLastName("Test last name");
         employee.setIsFired(false);
         employee.setDateOfBirth(LocalDate.of(1997, 04, 10));
         employee.setGender(Gender.WOMAN);

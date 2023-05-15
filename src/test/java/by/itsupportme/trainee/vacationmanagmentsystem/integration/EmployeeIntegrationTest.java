@@ -29,20 +29,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
 
     private static final String TEST_FIRST_NAME = "Test first name";
     private static final String TEST_LAST_NAME = "Test last name";
-    private static final String TEST_FIRST_NAME_EMPLOYEE = "Test first name employee";
-    private static final String TEST_LAST_NAME_EMPLOYEE = "Test last name employee";
     private static final String UPDATE_FIRST_NAME = "Update first name";
     private static final String UPDATE_LAST_NAME = "Update last name";
-    private static final String TEST_NAME_POSITION = "Test name position";
-    private static final String UPDATE_NAME_POSITION = "Update name position";
-    private static final String TEST_NAME_DEPARTMENT = "Test name department";
-    private static final String UPDATE_NAME_DEPARTMENT = "Update name department";
+    private static final String TEST_NAME = "Test name";
+    private static final String UPDATE_NAME = "Update name";
+
+    private static final String EMPLOYEE_DOES_NOT_EXIST = "Employee doesn't exist";
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -293,7 +290,7 @@ class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(EMPLOYEE_CAN_NOT_BE_BOSS_WITH_THE_SAME_ID));
+                .andExpect(jsonPath("$.message").value("Employee can't be boss with the same id"));
     }
 
     @Test
@@ -319,7 +316,7 @@ class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(EMPLOYEE_BOSS_DOES_NOT_EXIST));
+                .andExpect(jsonPath("$.message").value("Employee boss doesn't exist"));
     }
 
     @Test
@@ -341,7 +338,7 @@ class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(DEPARTMENT_DTO_CAN_NOT_BE_NULL));
+                .andExpect(jsonPath("$.message").value("DepartmentDto can't be null"));
     }
 
     @Test
@@ -366,7 +363,7 @@ class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(POSITION_DTO_CAN_NOT_BE_NULL));
+                .andExpect(jsonPath("$.message").value("PositionDto can't be null"));
     }
 
     @Test
@@ -394,7 +391,7 @@ class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(DEPARTMENT_DOES_NOT_EXIST));
+                .andExpect(jsonPath("$.message").value("Department doesn't exist"));
     }
 
     @Test
@@ -422,7 +419,7 @@ class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(POSITION_DOES_NOT_EXIST));
+                .andExpect(jsonPath("$.message").value("Position doesn't exist"));
     }
 
     private LocalDate createDate(LocalDate date) {
@@ -436,23 +433,23 @@ class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
 
     private Position createPosition() {
         Position position = new Position();
-        position.setName(TEST_NAME_POSITION);
+        position.setName(TEST_NAME);
         return positionRepository.save(position);
     }
 
     private Position updatePosition(Position position) {
-        position.setName(UPDATE_NAME_POSITION);
+        position.setName(UPDATE_NAME);
         return position;
     }
 
     private Department createDepartment() {
         Department department = new Department();
-        department.setName(TEST_NAME_DEPARTMENT);
+        department.setName(TEST_NAME);
         return departmentRepository.save(department);
     }
 
     private Department updateDepartment(Department department) {
-        department.setName(UPDATE_NAME_DEPARTMENT);
+        department.setName(UPDATE_NAME);
         return department;
     }
 
@@ -465,8 +462,8 @@ class EmployeeIntegrationTest extends VacationManagmentSystemApplicationTests {
     private Employee createEmployee(Department department, Position position) {
         LocalDate dateOfBirth =  LocalDate.of(1997, 04, 18);
         Employee employee = new Employee();
-        employee.setFirstName(TEST_FIRST_NAME_EMPLOYEE);
-        employee.setLastName(TEST_LAST_NAME_EMPLOYEE);
+        employee.setFirstName(TEST_FIRST_NAME);
+        employee.setLastName(TEST_LAST_NAME);
         employee.setGender(Gender.MAN);
         employee.setDateOfBirth(dateOfBirth);
         employee.setIsFired(false);

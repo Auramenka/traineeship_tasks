@@ -17,15 +17,13 @@ public class Vacation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "date_start")
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateStart;
 
     @Column(name = "date_end")
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateEnd;
 
     @ManyToOne(fetch = FetchType.LAZY)

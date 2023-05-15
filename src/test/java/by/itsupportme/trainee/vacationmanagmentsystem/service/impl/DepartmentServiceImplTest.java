@@ -17,11 +17,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 @ExtendWith(MockitoExtension.class)
 class DepartmentServiceImplTest {
 
+    private static final String DEPARTMENT_DTO_IS_EMPTY = "DepartmentDto is empty";
+    private static final String DEPARTMENT_DOES_NOT_EXIST = "Department doesn't exist";
     private static final String TEST_NAME = "Test name";
 
     @Mock

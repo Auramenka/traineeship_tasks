@@ -17,10 +17,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 @ExtendWith(MockitoExtension.class)
 class PositionServiceImplTest {
+
+    private static final String POSITION_DTO_IS_EMPTY = "PositionDto is empty";
+    private static final String POSITION_DOES_NOT_EXIST = "Position doesn't exist";
 
     @Mock
     PositionRepository positionRepository;

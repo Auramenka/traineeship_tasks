@@ -1,6 +1,7 @@
 package by.itsupportme.trainee.vacationmanagmentsystem.controller;
 
 import by.itsupportme.trainee.vacationmanagmentsystem.dto.VacationDto;
+import by.itsupportme.trainee.vacationmanagmentsystem.model.Status;
 import by.itsupportme.trainee.vacationmanagmentsystem.service.VacationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,10 @@ public class VacationController {
     @PutMapping
     public ResponseEntity<VacationDto> updateVacation(@RequestBody VacationDto vacationDto) {
         return new ResponseEntity<>(vacationService.updateVacation(vacationDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/list/{id}/{status}")
+    public List<VacationDto> getAllMyVacationsAndWhereBoss(@PathVariable("id") Long id, @PathVariable("status") Status status) {
+        return vacationService.findAllVacations(id, status);
     }
 }

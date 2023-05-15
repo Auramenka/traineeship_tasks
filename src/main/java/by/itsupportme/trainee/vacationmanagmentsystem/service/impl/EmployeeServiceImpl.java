@@ -12,7 +12,6 @@ import by.itsupportme.trainee.vacationmanagmentsystem.repository.PositionReposit
 import by.itsupportme.trainee.vacationmanagmentsystem.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
         if (employeeDto == null) {
-            throw new NotExistsException(EMPLOYEE_DTO_IS_EMPTY);
+            throw new NotExistsException("EmployeeDto is empty");
         }
         return employeeMapper.toDto(employeeRepository.save(employeeMapper.toEntity(employeeDto)));
     }
@@ -40,9 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public EmployeeDto findById(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new NotExistsException(EMPLOYEE_DOES_NOT_EXIST));
-        return employeeMapper.toDto(employee);
+        return employeeMapper.toDto(getEmployeeFromDB(id));
     }
 
     public List<EmployeeDto> findByIds(List<Long> ids) {
@@ -52,44 +49,42 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new NotExistsException(EMPLOYEE_DOES_NOT_EXIST));
-        employeeRepository.deleteById(employee.getId());
+        Employee employeeFromDB = getEmployeeFromDB(id);
+        employeeRepository.deleteById(employeeFromDB.getId());
     }
 
     public EmployeeDto updateEmployee(EmployeeDto employeeDto) {
         if (employeeDto.getDepartmentDto() == null) {
-            throw new NotExistsException(DEPARTMENT_DTO_CAN_NOT_BE_NULL);
+            throw new NotExistsException("DepartmentDto can't be null");
         }
 
         if (employeeDto.getPositionDto() == null) {
-            throw new NotExistsException(POSITION_DTO_CAN_NOT_BE_NULL);
+            throw new NotExistsException("PositionDto can't be null");
         }
 
-        Employee employeeFromDB = employeeRepository.findById(employeeDto.getId())
-                .orElseThrow(() -> new NotExistsException(EMPLOYEE_DOES_NOT_EXIST));
+        Employee employeeFromDB = getEmployeeFromDB(employeeDto.getId());
 
         Department departmentFromDB = departmentRepository.findById(employeeDto.getDepartmentDto().getId())
-                .orElseThrow(() -> new NotExistsException(DEPARTMENT_DOES_NOT_EXIST));
+                .orElseThrow(() -> new NotExistsException("Department doesn't exist"));
 
         Position positionFromDB = positionRepository.findById(employeeDto.getPositionDto().getId())
-                .orElseThrow(() -> new NotExistsException(POSITION_DOES_NOT_EXIST));
+                .orElseThrow(() -> new NotExistsException("Position doesn't exist"));
 
         if (employeeFromDB.getId().equals(employeeDto.getBossId())) {
-            throw new RuntimeException(EMPLOYEE_CAN_NOT_BE_BOSS_WITH_THE_SAME_ID);
+            throw new RuntimeException("Employee can't be boss with the same id");
         }
 
         Employee bossFromDB = employeeRepository.findById(employeeDto.getBossId())
-                .orElseThrow(() -> new NotExistsException(EMPLOYEE_BOSS_DOES_NOT_EXIST));
+                .orElseThrow(() -> new NotExistsException("Employee boss doesn't exist"));
 
-        employeeFromDB.setFirstName(employeeDto.getFirstName());
-        employeeFromDB.setLastName(employeeDto.getLastName());
-        employeeFromDB.setDateOfBirth(employeeDto.getDateOfBirth());
-        employeeFromDB.setGender(employeeDto.getGender());
         employeeFromDB.setDepartment(departmentFromDB);
         employeeFromDB.setPosition(positionFromDB);
-        employeeFromDB.setIsFired(employeeDto.getIsFired());
         employeeFromDB.setBoss(bossFromDB);
+        employeeMapper.updateEmployee(employeeDto, employeeFromDB);
         return employeeMapper.toDto(employeeRepository.save(employeeFromDB));
+    }
+
+    private Employee getEmployeeFromDB(Long id) {
+        return employeeRepository.findById(id).orElseThrow(() -> new NotExistsException("Employee doesn't exist"));
     }
 }

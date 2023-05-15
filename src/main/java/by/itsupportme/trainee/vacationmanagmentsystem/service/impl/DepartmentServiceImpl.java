@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import static by.itsupportme.trainee.vacationmanagmentsystem.constants.Constants.*;
 
 @RequiredArgsConstructor
 @Service
@@ -27,9 +26,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     public DepartmentDto findById(Long id) {
-        Department departmentFromDb = departmentRepository.findById(id)
-                .orElseThrow(() -> new NotExistsException(DEPARTMENT_DOES_NOT_EXIST));
-        return departmentMapper.toDto(departmentFromDb);
+        return departmentMapper.toDto(getDepartmentFromDB(id));
     }
 
     public List<DepartmentDto> getAllDepartments() {
@@ -39,22 +36,24 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     public void deleteDepartment(Long id) {
-        Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new NotExistsException(DEPARTMENT_DOES_NOT_EXIST));
-        departmentRepository.deleteById(department.getId());
+        Department departmentFromDB = getDepartmentFromDB(id);
+        departmentRepository.deleteById(departmentFromDB.getId());
     }
 
     public DepartmentDto updateDepartment(DepartmentDto departmentDto) {
         checkDepartmentDto(departmentDto);
-        Department departmentFromDB = departmentRepository.findById(departmentDto.getId())
-                .orElseThrow(() -> new NotExistsException(DEPARTMENT_DOES_NOT_EXIST));
+        Department departmentFromDB = getDepartmentFromDB(departmentDto.getId());
         departmentFromDB.setName(departmentDto.getName());
         return departmentMapper.toDto(departmentRepository.save(departmentFromDB));
     }
 
     private void checkDepartmentDto(DepartmentDto departmentDto) {
         if (departmentDto == null) {
-            throw new NotExistsException(DEPARTMENT_DTO_IS_EMPTY);
+            throw new NotExistsException("DepartmentDto is empty");
         }
+    }
+
+    private Department getDepartmentFromDB(Long id) {
+        return departmentRepository.findById(id).orElseThrow(() -> new NotExistsException("Department doesn't exist"));
     }
 }

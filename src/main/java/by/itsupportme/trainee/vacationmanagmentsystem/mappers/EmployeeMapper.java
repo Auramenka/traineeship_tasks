@@ -4,6 +4,7 @@ import by.itsupportme.trainee.vacationmanagmentsystem.dto.EmployeeDto;
 import by.itsupportme.trainee.vacationmanagmentsystem.model.Employee;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {DepartmentMapper.class, PositionMapper.class,
         ListVacationsMapper.class})
@@ -31,4 +32,10 @@ public interface EmployeeMapper {
     @Mapping(target = "vacations", source = "employeeDto.vacationDto")
     @Mapping(target = "boss", source = "employeeDto.bossId")
     Employee toEntity(EmployeeDto employeeDto);
+
+    @Mapping(target = "department", ignore = true)
+    @Mapping(target = "position", ignore = true)
+    @Mapping(target = "vacations", ignore = true)
+    @Mapping(target = "boss", ignore = true)
+    void updateEmployee(EmployeeDto employeeDto, @MappingTarget Employee employee);
 }

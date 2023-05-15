@@ -9,17 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(NotExistsException.class)
-    public ResponseEntity<ErrorMessage> resourceNotExistsException(NotExistsException ex, WebRequest request) {
-        ErrorMessage message = new ErrorMessage(
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                request.getDescription(false));
-
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler({RuntimeException.class, NotExistsException.class})
     public ResponseEntity<ErrorMessage> globalRuntimeException(RuntimeException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
