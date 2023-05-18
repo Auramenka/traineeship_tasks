@@ -4,6 +4,7 @@ import by.itsupportme.trainee.vacationmanagmentsystem.dto.VacationDto;
 import by.itsupportme.trainee.vacationmanagmentsystem.model.Status;
 import by.itsupportme.trainee.vacationmanagmentsystem.service.VacationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +47,10 @@ public class VacationController {
     @GetMapping("/list/{id}/{status}")
     public List<VacationDto> getAllMyVacationsAndWhereBoss(@PathVariable("id") Long id, @PathVariable("status") Status status) {
         return vacationService.findAllVacations(id, status);
+    }
+
+    @GetMapping("/page/{numberOfPage}")
+    public ResponseEntity<List<VacationDto>> getPage(@PathVariable("numberOfPage") int numberOfPage) {
+        return new ResponseEntity<>(vacationService.getPageWithVacations(numberOfPage), new HttpHeaders(), HttpStatus.OK);
     }
 }

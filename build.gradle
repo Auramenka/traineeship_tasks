@@ -23,6 +23,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.liquibase:liquibase-core'
 	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.3'
+	implementation group: 'org.apache.poi', name: 'poi', version: '3.9'
+
 	compileOnly 'org.projectlombok:lombok'
 	testImplementation 'com.h2database:h2:2.1.214'
 	runtimeOnly 'com.mysql:mysql-connector-j'

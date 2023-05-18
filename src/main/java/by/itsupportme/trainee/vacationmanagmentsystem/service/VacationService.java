@@ -12,4 +12,5 @@ public interface VacationService {
     VacationDto updateVacation(VacationDto vacationDto);
     VacationDto findById(Long id);
     List<VacationDto> findAllVacations(Long id, Status status);
+    List<VacationDto> getPageWithVacations(int pageNo);
 }
